@@ -45,6 +45,12 @@ class _TaskPageState extends State<TaskPage> {
         });
   }
 
+  void deleteTask(int index){
+    setState(() {
+      taskList.removeAt(index);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,7 +72,8 @@ class _TaskPageState extends State<TaskPage> {
           return Tasks(
               onChanged: (value) => checkBoxClicked(value, index),
               taskDone: taskList[index][1],
-              taskName: taskList[index][0]);
+              taskName: taskList[index][0],
+              deleteFunction: (context) => deleteTask(index),);
         },
       ),
     );

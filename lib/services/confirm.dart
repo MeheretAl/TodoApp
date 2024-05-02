@@ -3,7 +3,14 @@ import 'package:todo_app/services/buttons.dart';
 
 class confirmAction extends StatelessWidget {
   final controller;
-  const confirmAction({super.key,required this.controller);
+  VoidCallback onSave;
+  VoidCallback onCancel;
+  confirmAction({
+    super.key,
+    required this.controller,
+    required this.onSave,
+    required this.onCancel
+    });
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +22,7 @@ class confirmAction extends StatelessWidget {
         child: Column(
           children: [
             TextField(
+                controller: controller,
                 decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(20)),
@@ -23,8 +31,8 @@ class confirmAction extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                button(text: "Clear", onClicked: () {}),
-                button(text: "Save", onClicked: () {})
+                button(text: "Clear", onClicked: onCancel),
+                button(text: "Save", onClicked: onSave)
                 
                 
               ],

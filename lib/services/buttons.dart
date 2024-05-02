@@ -12,8 +12,6 @@ class button extends StatelessWidget {
       onPressed: onClicked,
       color: Theme.of(context).primaryColor,
       child: Text(text),
-      
-
       );
     
   }

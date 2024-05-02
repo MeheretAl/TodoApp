@@ -11,6 +11,7 @@ class TaskPage extends StatefulWidget {
 
 class _TaskPageState extends State<TaskPage> {
   final currController = TextEditingController();
+
   List taskList = [
     ["make tutorial", false],
     ["win bet", false]
@@ -23,12 +24,23 @@ class _TaskPageState extends State<TaskPage> {
     });
   }
 
+  void saveTask(){
+    setState(() {
+      taskList.add([currController.text , false]);
+    });
+    currController.clear();
+    Navigator.of(context).pop();
+  }
+
+
   void createNewTask() {
     showDialog(
         context: context,
         builder: (context) {
           return confirmAction(
             controller: currController,
+            onSave: saveTask,
+            onCancel: () => Navigator.of(context).pop(),
           );
         });
   }

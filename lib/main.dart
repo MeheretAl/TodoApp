@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'pages/TaskPage.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 void main() {
+  Hive
   runApp(const MyApp());
 }
 

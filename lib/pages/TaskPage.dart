@@ -1,35 +1,47 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:todo_app/database/database.dart';
 import 'package:todo_app/services/tasks_tile.dart';
 import 'package:todo_app/services/confirm.dart';
 
 class TaskPage extends StatefulWidget {
-  TaskPage({super.key} );
+  const TaskPage({super.key} );
 
   @override
   State<TaskPage> createState() => _TaskPageState();
 }
 
 class _TaskPageState extends State<TaskPage> {
+  final _box  = Hive.box('databox');
   final currController = TextEditingController();
 
-  List taskList = [
-    ["make tutorial", false],
-    ["win bet", false]
-  ];
+  taskDatbase db = taskDatbase();
+  @override
+  void initState() {
+
+    if (_box.get("TODOLIST")  == null) {
+      db.initDatabase();
+     } else {
+      db.loadDatabase();
+     }
+    super.initState();
+  }
 
   void checkBoxClicked(bool? value, int index) {
     setState(() {
-      taskList[index][1] = !(taskList[index][1]);
-      TextStyle(decoration: TextDecoration.lineThrough);
+      db.todoList[index][1] = !(db.todoList[index][1]);
+      const TextStyle(decoration: TextDecoration.lineThrough);
     });
+    db.updateDatabase();
   }
 
   void saveTask(){
     setState(() {
-      taskList.add([currController.text , false]);
+      db.todoList.add([currController.text , false]);
     });
     currController.clear();
     Navigator.of(context).pop();
+    db.updateDatabase();
   }
 
 
@@ -43,18 +55,20 @@ class _TaskPageState extends State<TaskPage> {
             onCancel: () => Navigator.of(context).pop(),
           );
         });
+    db.updateDatabase();
   }
 
   void deleteTask(int index){
     setState(() {
-      taskList.removeAt(index);
+      db.todoList.removeAt(index);
     });
+    db.updateDatabase();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 114, 167, 192),
+      backgroundColor:const Color.fromARGB(255, 114, 167, 192),
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(31, 172, 153, 153),
         toolbarHeight: 100,
@@ -64,15 +78,15 @@ class _TaskPageState extends State<TaskPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: createNewTask,
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
       body: ListView.builder(
-        itemCount: taskList.length,
+        itemCount: db.todoList.length,
         itemBuilder: (context, index) {
           return Tasks(
               onChanged: (value) => checkBoxClicked(value, index),
-              taskDone: taskList[index][1],
-              taskName: taskList[index][0],
+              taskDone: db.todoList[index][1],
+              taskName: db.todoList[index][0],
               deleteFunction: (context) => deleteTask(index),);
         },
       ),
